@@ -60,19 +60,19 @@ export default class App extends Component {
       );
   }
 
-signUpFooterComponent = () => {
-  return (
-    <View style={[viewStyles.forgottenLoginEncapsulationView, viewStyles.signUpFooterComponent]}>
-      <Text style={textStyles.forgottenLogin}>Dont have an account?</Text>
-      <TappableText
-        textStyle={[textStyles.forgottenLogin, textStyles.forgottenLoginBold]}
-        textTapped={ () => Linking.openURL(urls.instagramSignUp) }
-      >
-        Sign Up
-      </TappableText>
-    </View>
-  );
-}
+  signUpFooterComponent = () => {
+    return (
+      <View style={[viewStyles.forgottenLoginEncapsulationView, viewStyles.signUpFooterComponent]}>
+        <Text style={textStyles.forgottenLogin}>Dont have an account?</Text>
+        <TappableText
+          textStyle={[textStyles.forgottenLogin, textStyles.forgottenLoginBold]}
+          textTapped={ () => Linking.openURL(urls.instagramSignUp) }
+        >
+          Sign Up
+        </TappableText>
+      </View>
+    );
+  }
 
   loginScreenComponent = () => {
     return (
