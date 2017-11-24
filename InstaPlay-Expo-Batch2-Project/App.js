@@ -7,6 +7,8 @@ import Dimensions from 'Dimensions';
 const windowSize = Dimensions.get('window');
 const standardComponentWidth = windowSize.width * 0.82;
 
+const twitterIconSize = 19;
+
 const colors = {
   facebook: 'rgb(59, 89, 152)',
   text: 'rgba(255, 255, 255, 0.75)',
@@ -39,6 +41,38 @@ export default class App extends Component {
   loginButtonPressed = () => {
     console.log("Button was pressed!!");
   }
+
+  loginWithTwitterComponent = () => {
+      return (
+        <View style={viewStyles.twitterLoginViewStyle}>
+          <Image
+            source={require('./src/images/icons/twitter_bird.png')}
+            style={viewStyles.twitterIcon}
+            resizeMode={'contain'}
+          />
+          <TappableText
+            textStyle={[textStyles.forgottenLogin, textStyles.forgottenLoginBold, textStyles.twitterLogin]}
+            textTapped={ () => Linking.openURL(urls.twitterLogin) }
+          >
+            Log In With Twitter
+          </TappableText>
+        </View>
+      );
+  }
+
+signUpFooterComponent = () => {
+  return (
+    <View style={[viewStyles.forgottenLoginEncapsulationView, viewStyles.signUpFooterComponent]}>
+      <Text style={textStyles.forgottenLogin}>Dont have an account?</Text>
+      <TappableText
+        textStyle={[textStyles.forgottenLogin, textStyles.forgottenLoginBold]}
+        textTapped={ () => Linking.openURL(urls.instagramSignUp) }
+      >
+        Sign Up
+      </TappableText>
+    </View>
+  );
+}
 
   loginScreenComponent = () => {
     return (
@@ -97,7 +131,12 @@ export default class App extends Component {
             <View style={viewStyles.orSeparatorLine}/>
           </View>
 
+          {this.loginWithTwitterComponent()}
+
         </ScrollView>
+
+
+      {this.signUpFooterComponent()}
 
       </ImageBackground>
     );
@@ -120,7 +159,7 @@ const viewStyles = {
   instagramTextLogo: {
     width: 150,
     height: 80,
-    marginTop: '35%',
+    marginTop: '30%',
     marginBottom: 25,
     alignSelf: 'center'
   },
@@ -159,7 +198,7 @@ const viewStyles = {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 14,
+    marginVertical: 14,
     paddingHorizontal: 5
     // backgroundColor: 'white'
   },
@@ -170,6 +209,27 @@ const viewStyles = {
     borderColor: colors.instagramButtonBorderColor,
     borderWidth: 0.5,
     marginHorizontal: 5
+  },
+  twitterLoginViewStyle: {
+    flexDirection: 'row',
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  twitterIcon: {
+    width: twitterIconSize,
+    height: twitterIconSize,
+    marginHorizontal: 4
+  },
+  signUpFooterComponent: {
+    flex: 0.35,
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    borderWidth: 1,
+    borderColor: 'rgba(200, 200, 200, 0.25)',
+    shadowColor: 'black',
+    shadowOffset: {width: 0, height: 5.5},
+    height: null,
+    width: windowSize.width
   }
 
 };
@@ -189,6 +249,9 @@ const textStyles = {
     color: 'white',
     backgroundColor: 'transparent',
     fontWeight: 'bold',
+    fontSize: 13
+  },
+  twitterLogin: {
     fontSize: 13
   }
 
