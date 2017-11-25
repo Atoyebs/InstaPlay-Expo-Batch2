@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import { Text, View, ImageBackground, Image, StatusBar, ScrollView, Linking, WebView } from 'react-native';
+import { Text, View, ImageBackground, Image, StatusBar, ScrollView, Linking, WebView, FlatList } from 'react-native';
 import LoginButton from './src/components/LoginButton';
 import TappableText from './src/components/TappableText';
 import InstaNavigationBar from './src/components/InstaNavigationBar';
 import NetworkManager from './src/model/NetworkManager';
+import InstaFeedCell from './src/components/InstaFeedCell';
 import Dimensions from 'Dimensions';
 
 const windowSize = Dimensions.get('window');
@@ -75,8 +76,10 @@ export default class App extends Component {
 
         //this is supposed to get all our data
         this.apiManager.getSessionAndFeedData( (userData) => {
+          this.userData = userData;
           console.log(userData);
         }, (feedData) => {
+          this.feedData = feedData;
           console.log(feedData);
           this.setState({accessToken: foundAccessToken});
         });
@@ -100,9 +103,22 @@ export default class App extends Component {
   }
 
   instagramFeedScreenComponent = () => {
+
+    // <FlatList
+    //     data={this.props.reduxState.feedData}
+    //     renderItem={({item}) => <FeedCell cellData={item} />}
+    //     keyExtractor={item => item.id}
+    //     onViewableItemsChanged={({viewableItems, changed}) => this.onViewableItemsChanged({viewableItems, changed})}
+    //   />
+
     return (
       <View style={{flex: 1}}>
         <InstaNavigationBar />
+        <FlatList
+          data={this.feedData}
+          renderItem={({item}) => <InstaFeedCell cellData={item}/>  }
+          keyExtractor={item => item.id}
+        />
       </View>
     );
   }
