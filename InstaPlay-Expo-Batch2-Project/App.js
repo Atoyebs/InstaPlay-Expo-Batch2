@@ -41,7 +41,6 @@ export default class App extends Component {
     this.state = {
       authenticationURL: urls.instagramAuthLogin,
       accessToken: '',
-      isUserLoggedIn: false,
       displayAuthenticationWebView: false
     }
 
@@ -68,7 +67,7 @@ export default class App extends Component {
         var startIndexOfAccessToken = webViewState.url.lastIndexOf(accessTokenSubString) + accessTokenSubString.length;
         var foundAccessToken = webViewState.url.substr(startIndexOfAccessToken);
 
-        this.setState({accessToken: foundAccessToken, displayAuthenticationWebView: false});
+        this.setState({accessToken: foundAccessToken});
 
       }
 
@@ -84,6 +83,15 @@ export default class App extends Component {
         startInLoadingState={true}
         onNavigationStateChange={this.onURLStateChange}
       />
+    );
+  }
+
+  instagramFeedScreenComponent = () => {
+    return (
+      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+        <Text>Congratulations Youve logged on with accessToken: </Text>
+        <Text>{this.state.accessToken}</Text>
+      </View>
     );
   }
 
@@ -188,17 +196,31 @@ export default class App extends Component {
   }
 
   render() {
-    if (this.state.displayAuthenticationWebView) {
-      return(
-        this.authenticationWebViewComponent()
-      );
-    }
-    else {
+
+    var hasSuccesfullyLoggedIn = (this.state.accessToken.length > 1);
+    var shouldDisplayLoginScreen = (this.state.displayAuthenticationWebView == false && this.state.accessToken.length < 1);
+
+    // console.log("this.state.displayAuthenticationWebView = " + this.state.displayAuthenticationWebView )
+
+    if(shouldDisplayLoginScreen) {
       return (
         this.loginScreenComponent()
       );
     }
+    else if(hasSuccesfullyLoggedIn){
+      return (
+        this.instagramFeedScreenComponent()
+      );
+    }
+    else if (this.state.displayAuthenticationWebView == true) {
+      return(
+        this.authenticationWebViewComponent()
+      );
+    }
+
+
   }
+
 
 
 }
