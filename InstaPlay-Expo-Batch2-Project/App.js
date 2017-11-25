@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Text, View, ImageBackground, Image, StatusBar, ScrollView, Linking } from 'react-native';
+import { Text, View, ImageBackground, Image, StatusBar, ScrollView, Linking, WebView } from 'react-native';
 import LoginButton from './src/components/LoginButton';
 import TappableText from './src/components/TappableText';
 import Dimensions from 'Dimensions';
@@ -35,11 +35,56 @@ const urls = {
 export default class App extends Component {
 
   constructor(props){
+
     super(props);
+
+    this.state = {
+      authenticationURL: urls.instagramAuthLogin,
+      accessToken: '',
+      isUserLoggedIn: false,
+      displayAuthenticationWebView: false
+    }
+
   }
 
   loginButtonPressed = () => {
-    console.log("Button was pressed!!");
+    //this function is executed when either of the login buttons are pressed
+    this.setState({ displayAuthenticationWebView: true });
+  }
+
+
+  onURLStateChange = (webViewState) => {
+    //this function is called/executed everytime the URL in the browser changes
+
+    const accessTokenSubString = 'access_token=';
+    console.log("Current URL = " + webViewState.url);
+
+    //if the current url contains the substring "access_token" then extract the access_token
+    if(webViewState.url.includes(accessTokenSubString)){
+
+      //safegaurd conditional (if) statement
+      if(this.state.accessToken.length < 1){
+        //the index of the beginning of the access token
+        var startIndexOfAccessToken = webViewState.url.lastIndexOf(accessTokenSubString) + accessTokenSubString.length;
+        var foundAccessToken = webViewState.url.substr(startIndexOfAccessToken);
+
+        this.setState({accessToken: foundAccessToken, displayAuthenticationWebView: false});
+
+      }
+
+    }
+
+
+  }
+
+  authenticationWebViewComponent = () => {
+    return (
+      <WebView
+        source={{ uri: this.state.authenticationURL }}
+        startInLoadingState={true}
+        onNavigationStateChange={this.onURLStateChange}
+      />
+    );
   }
 
   loginWithTwitterComponent = () => {
@@ -77,7 +122,7 @@ export default class App extends Component {
   loginScreenComponent = () => {
     return (
       <ImageBackground
-        source={require('./src/images/insta-background-3.jpg')}
+        source={require('./src/images/insta-background-2.jpg')}
         resizeMode={'cover'}
         style={viewStyles.container}
       >
@@ -143,9 +188,16 @@ export default class App extends Component {
   }
 
   render() {
-    return (
-      this.loginScreenComponent()
-    );
+    if (this.state.displayAuthenticationWebView) {
+      return(
+        this.authenticationWebViewComponent()
+      );
+    }
+    else {
+      return (
+        this.loginScreenComponent()
+      );
+    }
   }
 
 
